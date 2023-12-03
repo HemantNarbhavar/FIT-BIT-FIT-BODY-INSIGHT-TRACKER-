@@ -1,0 +1,58 @@
+CREATE DATABASE FITBIT;
+
+USE FITBIT;
+
+CREATE TABLE signUp(
+	user_id INT AUTO_INCREMENT, 
+	email_id VARCHAR(255) NOT NULL, 
+	number INT(11) NOT NULL, 
+	password VARCHAR(255) NOT NULL, 
+	PRIMARY KEY (user_id) 
+);
+
+CREATE TABLE userInfo(
+	user_id INT,
+	name VARCHAR(255) NOT NULL,
+	dob DATE NOT NULL,
+	weight FLOAT(3,2) NOT NULL,
+	height FLOAT(3,2) NOT NULL,
+	gender ENUM('male','female') NOT NULL, 
+	weeklyExercise ENUM('No','Light','Moderate','Active','Extra Active'),
+	PRIMARY KEY (user_id), 
+	FOREIGN KEY (user_id) REFERENCES signUp(user_id) 
+);
+
+CREATE TABLE healthInfo(
+	user_id INT,
+	bmi FLOAT NOT NULL,
+	bfp FLOAT NOT NULL,
+	lbm FLOAT NOT NULL,
+	bmr INT NOT NULL,
+	PRIMARY KEY (user_id),
+	FOREIGN KEY (user_id) REFERENCES userInfo(user_id)
+);
+
+CREATE TABLE goal(
+	goal_id INT AUTO_INCREMENT,
+	user_id INT NOT NULL,
+	targetGoal ENUM('Loss','Maintain','Gain') NOT NULL,
+	targetCal INT NOT NULL,
+	PRIMARY KEY (goal_id),
+	FOREIGN KEY (user_id) REFERENCES userInfo(user_id)
+);
+
+CREATE TABLE dailyIntak(
+	intak_date DATE,
+	goal_id INT NOT NULL,
+	calories_intake INT NOT NULL,
+	PRIMARY KEY (intak_date),
+	FOREIGN KEY (goal_id) REFERENCES goal(goal_id)
+);
+
+CREATE TABLE dailyBurn(
+	burn_date DATE,
+	goal_id INT NOT NULL,
+	calories_burn INT NOT NULL,
+	PRIMARY KEY (burn_date),
+	FOREIGN KEY (goal_id) REFERENCES goal(goal_id)
+);
